@@ -1,0 +1,56 @@
+MPLINK 5.08, LINKER
+Linker Map File - Created Wed Jul  5 20:42:33 2017
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000002
+                   .cinit    romdata   0x000001    program   0x000004
+                   .org_1       code   0x000004    program   0x00009c
+.config_2007_BUILD/DEFAULT/PRODUCTION/BLA.O       code   0x002007    program   0x000002
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000002      
+                            0x000004    0x000051      
+                            0x002007    0x002007      
+            82 out of 4230 program addresses used, program memory utilization is 1%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    Delay   0x000033    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+                     Loop   0x000029    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+                    Loop2   0x000040    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+                    Loop3   0x00002d    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+                    Loop4   0x000044    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+                    Loop5   0x00004d    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+                      Off   0x000031    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+                       S1   0x00000a    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+                       S2   0x000010    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+                    Start   0x00001d    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+             _.org_1_0051   0x000051    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                       S1   0x00000a    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+                       S2   0x000010    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+                    Start   0x00001d    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+                     Loop   0x000029    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+                    Loop3   0x00002d    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+                      Off   0x000031    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+                    Delay   0x000033    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+                    Loop2   0x000040    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+                    Loop4   0x000044    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+                    Loop5   0x00004d    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+             _.org_1_0051   0x000051    program     static /home/munhoz/MPLABXProjects/tcd.X/bla.asm
+
+

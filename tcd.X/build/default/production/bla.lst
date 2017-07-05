@@ -1,0 +1,541 @@
+MPASM 5.74  /HOME/MUNHOZ/MPLABXPROJECTS/TCD.   7-5-2017  17:42:33         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 #include "p16f873a.inc"
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ; Build date : May 17 2017
+                      00005 ;  MPASM PIC16F873A processor include
+                      00006 ; 
+                      00007 ;  (c) Copyright 1999-2017 Microchip Technology, All rights reserved
+                      00008 ;==========================================================================
+                      00009 
+                      00527         LIST
+                      00002 
+                      00003 ; CONFIG
+                      00004 ; __config 0xFF39
+2007   3F39           00005  __CONFIG _FOSC_XT & _WDTE_OFF & _PWRTE_OFF & _BOREN_OFF & _LVP_OFF & _CPD_OFF & _WRT_OFF & _CP_OFF
+                      00006 
+                      00007 
+Warning[205]: Found directive in column 1. (CBLOCK)
+                      00008 CBLOCK 0x20
+  00000020            00009     TICS
+  00000021            00010     SEC
+  00000022            00011     DIST_MULT
+  00000023            00012     AUX
+  00000024            00013     TRIGGER
+Warning[205]: Found directive in column 1. (ENDC)
+                      00014 ENDC
+                      00015     
+Warning[205]: Found directive in column 1. (ORG)
+                      00016 ORG 0
+0000   2???           00017     GOTO Start
+Warning[205]: Found directive in column 1. (ORG)
+                      00018 ORG 4
+0004   1283 1303      00019     BANKSEL INTCON
+0006   1D0B           00020     BTFSS INTCON, TMR0IF
+0007   2???           00021     GOTO Loop
+                      00022     
+0008   1824           00023     BTFSC TRIGGER, 0
+0009   2???           00024     GOTO S2
+                      00025     
+000A                  00026 S1:
+000A   0BA0           00027     DECFSZ TICS, 1
+000B   2???           00028     GOTO Loop2
+                      00029     
+000C   303E           00030     MOVLW d'62'
+000D   00A0           00031     MOVWF TICS
+                      00032     
+000E   0AA1           00033     INCF SEC, 1
+000F   2???           00034     GOTO Loop2
+                      00035     
+0010                  00036 S2:
+0010   0BA0           00037     DECFSZ TICS,1
+0011   2???           00038     GOTO Loop5
+                      00039     
+MPASM 5.74  /HOME/MUNHOZ/MPLABXPROJECTS/TCD.   7-5-2017  17:42:33         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0012   303E           00040     MOVLW d'62'
+0013   00A0           00041     MOVWF TICS
+                      00042     
+0014   0BA1           00043     DECFSZ SEC,1
+0015   2???           00044     GOTO Loop5
+                      00045     
+0016   3000           00046     MOVLW d'0'
+0017   0723           00047     ADDWF AUX, 0        ; W = AUX
+0018   00A1           00048     MOVWF SEC           ; SEC = AUX
+                      00049     
+0019   0BA2           00050     DECFSZ DIST_MULT,1
+001A   2???           00051     GOTO Loop5
+                      00052     
+001B   2???           00053     GOTO Loop
+                      00054     
+001C   0009           00055     RETFIE
+                      00056  
+001D                  00057 Start:
+001D   1683 1303      00058     BANKSEL TRISB       
+001F   30FE           00059     MOVLW b'11111110'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0020   0086           00060     MOVWF TRISB         ; RB[1-7] = input RB[0] = OUTPUT
+                      00061     
+0021   1683 1303      00062     BANKSEL OPTION_REG
+0023   3085           00063     MOVLW b'10000101'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0024   0081           00064     MOVWF OPTION_REG    ; configuração do timer
+                      00065     
+0025   1283 1303      00066     BANKSEL TMR0
+0027   3083           00067     MOVLW d'131'
+0028   0081           00068     MOVWF TMR0
+                      00069     
+0029                  00070 Loop:
+0029   1283 1303      00071     BANKSEL INTCON
+002B   3080           00072     MOVLW b'10000000'
+002C   008B           00073     MOVWF INTCON        ; deactivate timer based interruption
+                      00074     
+002D                  00075 Loop3:  
+002D   1283 1303      00076     BANKSEL PORTB
+002F   1886           00077     BTFSC PORTB, RB1    ; read RB[1] pin
+0030   2???           00078     GOTO Delay          ; if the RB[1] is active, jumps to the delay routine
+                      00079     
+0031                  00080 Off:
+0031   1006           00081     BCF PORTB, RB0      ; RB[0] = 0
+0032   2???           00082     GOTO Loop3
+                      00083     
+                      00084     
+0033                  00085 Delay:
+0033   1283 1303      00086     BANKSEL PORTB
+0035   1406           00087     BSF PORTB, RB0      ; RB[0] = 1
+                      00088     
+0036   3000           00089     MOVLW d'0'
+0037   00A3           00090     MOVWF AUX
+MPASM 5.74  /HOME/MUNHOZ/MPLABXPROJECTS/TCD.   7-5-2017  17:42:33         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00091     
+0038   3000           00092     MOVLW d'0'
+0039   00A1           00093     MOVWF SEC
+                      00094     
+003A   303E           00095     MOVLW d'62'
+003B   00A0           00096     MOVWF TICS
+                      00097     
+003C   3000           00098     MOVLW d'0'
+003D   00A4           00099     MOVWF TRIGGER
+                      00100     
+003E   3002           00101     MOVLW d'2'
+003F   00A2           00102     MOVWF DIST_MULT
+                      00103     
+0040                  00104 Loop2:
+0040   1283 1303      00105     BANKSEL INTCON
+0042   30A0           00106     MOVLW b'10100000'
+0043   008B           00107     MOVWF INTCON        ; activate timer based interruption
+                      00108     
+0044                  00109 Loop4:
+0044   1283 1303      00110     BANKSEL PORTB
+0046   1D06           00111     BTFSS PORTB, RB2    ; read RB[2] pin
+0047   2???           00112     GOTO Loop4          ; if the RB[2] iS active,
+                      00113     
+0048   3001           00114     MOVLW d'1'
+0049   00A4           00115     MOVWF TRIGGER
+                      00116     
+004A   3000           00117     MOVLW d'0'
+004B   0721           00118     ADDWF SEC, 0        ; W = SEC
+004C   00A3           00119     MOVWF AUX           ; AUX = SEC
+                      00120     
+004D                  00121 Loop5:
+004D   1283 1303      00122     BANKSEL INTCON
+004F   30A0           00123     MOVLW b'10100000'
+0050   008B           00124     MOVWF INTCON        ; activate timer based interruption
+                      00125     
+0051   2???           00126     GOTO $
+                      00127     
+Warning[205]: Found directive in column 1. (end)
+3F39                  00128 end
+MPASM 5.74  /HOME/MUNHOZ/MPLABXPROJECTS/TCD.   7-5-2017  17:42:33         PAGE  4
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADCS2                             00000006
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+AUX                               00000023
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1                             00000015
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2                             0000001B
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+MPASM 5.74  /HOME/MUNHOZ/MPLABXPROJECTS/TCD.   7-5-2017  17:42:33         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CKE                               00000006
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+DIST_MULT                         00000022
+D_A                               00000005
+D_NOT_A                           00000005
+Delay                             00000033
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+GO_NOT_DONE                       00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+Loop                              00000029
+MPASM 5.74  /HOME/MUNHOZ/MPLABXPROJECTS/TCD.   7-5-2017  17:42:33         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+Loop2                             00000040
+Loop3                             0000002D
+Loop4                             00000044
+Loop5                             0000004D
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+OERR                              00000001
+OPTION_REG                        00000081
+Off                               00000031
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+R                                 00000002
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+MPASM 5.74  /HOME/MUNHOZ/MPLABXPROJECTS/TCD.   7-5-2017  17:42:33         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RC0                               00000000
+RC1                               00000001
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+READ_WRITE                        00000002
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+R_NOT_W                           00000002
+R_W                               00000002
+S                                 00000003
+S1                                0000000A
+S2                                00000010
+SEC                               00000021
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+MPASM 5.74  /HOME/MUNHOZ/MPLABXPROJECTS/TCD.   7-5-2017  17:42:33         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SSPSTAT                           00000094
+STATUS                            00000003
+SYNC                              00000004
+Start                             0000001D
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TICS                              00000020
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1                              0000000E
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRIGGER                           00000024
+TRISA                             00000085
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+TRISB                             00000086
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+MPASM 5.74  /HOME/MUNHOZ/MPLABXPROJECTS/TCD.   7-5-2017  17:42:33         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TRISC                             00000087
+TRISC0                            00000000
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_.org_1_0051                      00000051
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_BOREN_OFF                        00003FBF
+_BOREN_ON                         00003FFF
+_CONFIG                           00002007
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_CP_ON                            00001FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_DEVID1                           00002006
+_FOSC_EXTRC                       00003FFF
+_FOSC_HS                          00003FFE
+_FOSC_LP                          00003FFC
+_FOSC_XT                          00003FFD
+_HS_OSC                           00003FFE
+_IDLOC0                           00002000
+_IDLOC1                           00002001
+_IDLOC2                           00002002
+_IDLOC3                           00002003
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+MPASM 5.74  /HOME/MUNHOZ/MPLABXPROJECTS/TCD.   7-5-2017  17:42:33         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDTE_OFF                         00003FFB
+_WDTE_ON                          00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F873A                         00000001
+
+Errors   :     0
+Warnings :     5 reported,     0 suppressed
+Messages :     2 reported,     0 suppressed
+
+
